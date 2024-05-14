@@ -12,12 +12,13 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {Menu} from '@mui/icons-material';
 import {
-    addNewTodolistTC, changeTaskTitleTC,
+    addNewTodolistTC,
     changeTodolistFilterAC, changeTodolistTitleTC, deleteTodolistTC,
     FilterValuesType, getTodoTC,
     TodolistDomainType
 } from './state/todolists-reducer'
 import {
+    changeTaskTitleTC,
     createTaskTC,
     removeTaskTC, updateTaskTC
 } from './state/tasks-reducer';
