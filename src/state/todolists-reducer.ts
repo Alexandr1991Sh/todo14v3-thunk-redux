@@ -99,32 +99,75 @@ export const setTodolistAC = (todolist: TodolistType[]) => {
 
 
 // ===============================THUNKS===============================
-export const getTodoTC = (): AppThunkType => (dispatch, getState: any) => {
-    todolistsAPI.getTodolists()
-        .then((res) => {
-            dispatch(setTodolistAC(res.data))
-        })
+
+// export const getTodoTC = (): AppThunkType => (dispatch, getState: any) => {
+//     todolistsAPI.getTodolists()
+//         .then((res) => {
+//             dispatch(setTodolistAC(res.data))
+//         })
+// }
+
+// export const addNewTodolistTC = (title: string): AppThunkType => (dispatch, getState: any) => {
+//     todolistsAPI.createTodolist(title)
+//         .then((res) => {
+//             dispatch(addTodolistAC(title))
+//         })
+// }
+
+// export const deleteTodolistTC = (id: string): AppThunkType => (dispatch, getState: any) => {
+//     todolistsAPI.deleteTodolist(id)
+//         .then((res) => {
+//             dispatch(removeTodolistAC(id))
+//         })
+// }
+
+// export const changeTodolistTitleTC = (id: string, title: string): AppThunkType => (dispatch, getState: any) => {
+//     todolistsAPI.updateTodolist(id, title)
+//         .then((res) => {
+//             dispatch(changeTodolistTitleAC(id, title))
+//         })
+// }
+
+// ===============================async await===============================
+export const getTodoTC = (): AppThunkType => async dispatch => {
+    try {
+        const res = await todolistsAPI.getTodolists()
+        dispatch(setTodolistAC(res.data))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error getTodoTC')
+    }
 }
 
-export const addNewTodolistTC = (title: string): AppThunkType => (dispatch, getState: any) => {
-    todolistsAPI.createTodolist(title)
-        .then((res) => {
-            dispatch(addTodolistAC(title))
-        })
+
+export const addNewTodolistTC = (title: string): AppThunkType => async dispatch => {
+    try {
+        await todolistsAPI.createTodolist(title)
+        dispatch(addTodolistAC(title))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error addNewTodolistTC')
+    }
 }
 
-export const deleteTodolistTC = (id: string): AppThunkType => (dispatch, getState: any) => {
-    todolistsAPI.deleteTodolist(id)
-        .then((res) => {
-            dispatch(removeTodolistAC(id))
-        })
+export const deleteTodolistTC = (id: string): AppThunkType => async dispatch => {
+    try {
+        await todolistsAPI.deleteTodolist(id)
+        dispatch(removeTodolistAC(id))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error deleteTodolistTC')
+    }
 }
 
-export const changeTodolistTitleTC = (id: string, title: string): AppThunkType => (dispatch, getState: any) => {
-    todolistsAPI.updateTodolist(id, title)
-        .then((res) => {
-            dispatch(changeTodolistTitleAC(id, title))
-        })
+export const changeTodolistTitleTC = (id: string, title: string): AppThunkType => async dispatch => {
+    try {
+        await todolistsAPI.updateTodolist(id, title)
+        dispatch(changeTodolistTitleAC(id, title))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error changeTodolistTitleTC')
+    }
 }
 
 

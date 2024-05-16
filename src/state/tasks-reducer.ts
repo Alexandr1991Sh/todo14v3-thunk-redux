@@ -150,30 +150,104 @@ export const setTasksAC = (todolistId: string, tasks: TaskType[]) => {
 }
 
 // ===============================THUNKS===============================
-export const getTaskTC = (todolistId: string): AppThunkType =>
-    (dispatch, getState: any) => {
-        todolistsAPI.getTasks(todolistId)
-            .then((res) => {
-                dispatch(setTasksAC(todolistId, res.data.items))
-            })
-    }
 
-export const removeTaskTC = (taskId: string, todolistId: string): AppThunkType =>
-    (dispatch, getState: any) => {
-        todolistsAPI.deleteTask(taskId, todolistId)
-            .then((res) => {
-                dispatch(removeTaskAC(taskId, todolistId))
-            })
+// export const getTaskTC = (todolistId: string): AppThunkType =>
+//     (dispatch, getState: any) => {
+//         todolistsAPI.getTasks(todolistId)
+//             .then((res) => {
+//                 dispatch(setTasksAC(todolistId, res.data.items))
+//             })
+//     }
+
+// export const removeTaskTC = (taskId: string, todolistId: string): AppThunkType =>
+//     (dispatch, getState: any) => {
+//         todolistsAPI.deleteTask(taskId, todolistId)
+//             .then((res) => {
+//                 dispatch(removeTaskAC(taskId, todolistId))
+//             })
+//     }
+
+// export const createTaskTC = (title: string, todolistId: string): AppThunkType =>
+//     (dispatch, getState: any) => {
+//         todolistsAPI.createTask(title, todolistId)
+//             .then((res) => {
+//                 dispatch(addTaskAC(title, todolistId))
+//             })
+//     }
+
+// export const updateTaskTC = (todolistId: string, taskId: string, status: TaskStatuses): AppThunkType =>
+//     (dispatch, getState: () => AppRootStateType) => {
+//         const tasks = getState().tasks
+//         const task = tasks[todolistId].find((t) => t.id === taskId)
+//
+//         if (task) {
+//             const model: UpdateTaskModelType = {
+//                 title: task.title,
+//                 description: task.description,
+//                 status: status,
+//                 priority: task.priority,
+//                 startDate: task.startDate,
+//                 deadline: task.deadline
+//             }
+//             todolistsAPI.updateTask(todolistId, taskId, model)
+//                 .then((res) => {
+//                     dispatch(changeTaskStatusAC(taskId, status, todolistId))
+//                 })
+//         }
+//     }
+
+// export const changeTaskTitleTC = (taskId: string, newTitle: string, todolistId: string): AppThunkType =>
+//     (dispatch, getState: any) => {
+//         const tasks = getState().tasks
+//         const task = tasks[todolistId].find((t: any) => t.id === taskId)
+//
+//         if (task) {
+//             const model: UpdateTaskModelType = {
+//                 title: newTitle,
+//                 description: task.description,
+//                 status: task.status,
+//                 priority: task.priority,
+//                 startDate: task.startDate,
+//                 deadline: task.deadline
+//             }
+//             todolistsAPI.updateTask(todolistId, taskId, model)
+//                 .then((res) => {
+//                     dispatch(changeTaskTitleAC(todolistId, taskId, newTitle))
+//                 })
+//         }
+//     }
+
+// ===============================async await===============================
+export const getTaskTC = (todolistId: string): AppThunkType => async dispatch => {
+    try {
+        const res = await todolistsAPI.getTasks(todolistId)
+        dispatch(setTasksAC(todolistId, res.data.items))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error getTaskTC')
     }
-export const createTaskTC = (title: string, todolistId: string): AppThunkType =>
-    (dispatch, getState: any) => {
-        todolistsAPI.createTask(title, todolistId)
-            .then((res) => {
-                dispatch(addTaskAC(title, todolistId))
-            })
+}
+
+export const removeTaskTC = (taskId: string, todolistId: string): AppThunkType => async dispatch => {
+    try {
+        await todolistsAPI.deleteTask(taskId, todolistId)
+        dispatch(removeTaskAC(taskId, todolistId))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error removeTaskTC')
     }
+}
+export const createTaskTC = (title: string, todolistId: string): AppThunkType => async dispatch => {
+    try {
+        await todolistsAPI.createTask(title, todolistId)
+        dispatch(addTaskAC(title, todolistId))
+    } catch (e) {
+        console.error(e)
+        throw new Error('Error createTaskTC')
+    }
+}
 export const updateTaskTC = (todolistId: string, taskId: string, status: TaskStatuses): AppThunkType =>
-    (dispatch, getState: () => AppRootStateType) => {
+    async (dispatch, getState: () => AppRootStateType) => {
         const tasks = getState().tasks
         const task = tasks[todolistId].find((t) => t.id === taskId)
 
@@ -186,15 +260,18 @@ export const updateTaskTC = (todolistId: string, taskId: string, status: TaskSta
                 startDate: task.startDate,
                 deadline: task.deadline
             }
-            todolistsAPI.updateTask(todolistId, taskId, model)
-                .then((res) => {
-                    dispatch(changeTaskStatusAC(taskId, status, todolistId))
-                })
+            try {
+                await todolistsAPI.updateTask(todolistId, taskId, model)
+                dispatch(changeTaskStatusAC(taskId, status, todolistId))
+            } catch (e) {
+                console.error(e)
+                throw new Error('Error updateTaskTC')
+            }
         }
     }
 
 export const changeTaskTitleTC = (taskId: string, newTitle: string, todolistId: string): AppThunkType =>
-    (dispatch, getState: any) => {
+    async (dispatch, getState: any) => {
         const tasks = getState().tasks
         const task = tasks[todolistId].find((t: any) => t.id === taskId)
 
@@ -207,10 +284,13 @@ export const changeTaskTitleTC = (taskId: string, newTitle: string, todolistId: 
                 startDate: task.startDate,
                 deadline: task.deadline
             }
-            todolistsAPI.updateTask(todolistId, taskId, model)
-                .then((res) => {
-                    dispatch(changeTaskTitleAC(todolistId, taskId, newTitle))
-                })
+            try {
+                await todolistsAPI.updateTask(todolistId, taskId, model)
+                dispatch(changeTaskTitleAC(todolistId, taskId, newTitle))
+            } catch (e) {
+                console.error(e)
+                throw new Error('Error changeTaskTitleTC')
+            }
         }
     }
 
